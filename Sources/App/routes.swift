@@ -9,6 +9,9 @@ func routes(_ app: Application) throws {
     app.get("hello") { req -> String in
         return "Hello, world!"
     }
-
-    try app.register(collection: TodoController())
+    
+    app.post("api", "acronyms") { req -> EventLoopFuture<Acronym> in
+        let acronym = try req.content.decode(Acronym.self)
+        return acronym.save(on: req.db).map { acronym }
+    }
 }
